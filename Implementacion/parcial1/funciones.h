@@ -7,6 +7,7 @@
 using namespace std;
 
 void Leer(char *archivo, char *codigo);
+int strcmp(const char* cadena1, const char* cadena2);
 
 #endif // FUNCIONES_H
 
