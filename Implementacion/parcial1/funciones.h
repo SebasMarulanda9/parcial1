@@ -6,8 +6,9 @@
 
 using namespace std;
 
-void Leer(char *archivo, char *codigo);
+int len(char *texto);
 int strcmp(const char* cadena1, const char* cadena2);
+char *my_strtok(char* cadena, char delimitador);
 
 #endif // FUNCIONES_H
 
