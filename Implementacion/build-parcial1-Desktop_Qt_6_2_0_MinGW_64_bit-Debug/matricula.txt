@@ -1,0 +1,20 @@
+fisica mecanica,4,5,3
+calculo integral,4,5,3
+algebra y trigonometria,4,5,3
+geometria vectorial y analitica,4,5,3
+calculo diferencial,4,5,3litica,4,5,3
+vivamos la universidad,2,2,1ica,4,5,3
+introduccion a la ingenieria de telecomunicaciones,2,1,1B
+ecuaciones diferenciales,4,5,3e telecomufý
+ecuaciones diferenciales,4,5,3
+introduccion a la ingenieria de telecomunicaciones,2,1,1B
+introduccion a la ingenieria de telecomunicaciones,2,1,1B
+ecuaciones diferenciales,4,5,3e telecomufý
+calculo integral,4,5,3
+calculo integral,4,5,3
+calculo integral,4,5,3
+calculo integral,4,5,3
+calculo integral,4,5,3
+calculo integral,4,5,3
+calculo integral,4,5,3
+seminario de ingenieria de telecomunicaciones,2,1,1

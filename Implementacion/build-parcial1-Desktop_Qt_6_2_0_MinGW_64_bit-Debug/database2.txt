@@ -1,3 +1,4 @@
+
 2555101,algebra y trigonometria,4,5,3
 2555121,geometria vectorial y analitica,4,5,3
 2555131,calculo diferencial,4,5,3

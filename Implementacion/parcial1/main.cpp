@@ -4,59 +4,50 @@ using namespace std;
 
 int main()
 {
-    const char* rutaArchivo = "database.txt";
-    ifstream archivo(rutaArchivo);
-    char codigo[] = "2537101";
+    bool continuar = true;
+    char database[] = "database.txt";
+    char horario[] = "matricula.txt";
 
-    if(archivo.is_open()) {
-        char caracter;
+    while(continuar){
+        cout << "\n============ Menu ============" << endl;
+        cout << "1. Ingresar materias" << endl;
+        cout << "2. Ver pensum" << endl;
+        cout << "3. Ver horario" << endl;
+        cout << "4. Sugerir horas de estudio" << endl;
+        cout << "5. Salir" << endl << endl;
 
-        while(archivo.get(caracter)){
-            //cout << caracter;
-            if(caracter == '\n'){ // verificar si el caracter es una coma
+        int opcion;
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+        system("cls");
 
-                char cadena[8]; // array de caracteres para almacenar los siguientes 7 caracteres
-                char materia[60];
-                int indice = 0;
-                for(int i = 0; i < 7; i++){
-                    if (archivo.get(caracter)) {
-                        cadena[indice] = caracter; // almacenar el caracter en el array
-                        indice++; // aumentar el índice para el siguiente caracter
-                    }
-
-                    else{
-                        break;
-                    }
-                }
-                cadena[indice] = '\0'; // agregar un carácter nulo al final del array
-                if(strcmp(codigo,cadena)==0){
-                    int indice = 0;
-                    for(int i = 0; i < 60; i++){
-                        if(archivo.get(caracter)){
-                            if(caracter=='\n'){
-                                break;
-                            }
-
-                            else{
-                                materia[indice] = caracter; // almacenar el caracter en el array
-                                indice++; // aumentar el índice para el siguiente caracter
-                            }
-                        }
-
-                        else{
-                            break;
-                        }
-                    }
-                    cout << materia << endl;
-                }
-            }//if salto de linea
-
-        }//while
-        archivo.close();
-    }//if open
-
-    else{
-        cout << "Error al abrir el archivo." << endl;
+        switch(opcion){
+             case 1:
+                char codigo[7];
+                cout << "Ingrese el codigo de la materia: ";
+                cin >> codigo;
+                cout << endl;
+                matricular(codigo);
+                break;
+            case 2:
+                imprimir(database);
+                cout << endl;
+                break;
+            case 3:
+                imprimir(horario);
+                cout << endl;
+                break;
+            case 4:
+                cout << "En construccion" << endl;
+                break;
+            case 5:
+                cout << "Saliendo del programa..." << endl;
+                continuar = false;
+                break;
+            default:
+                cout << "Opcion invalida. Intente nuevamente." << endl;
+                break;
+        }
     }
 
     return 0;
