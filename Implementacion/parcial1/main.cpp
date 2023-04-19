@@ -6,7 +6,6 @@ int main()
 {
     bool continuar = true;
     char database[] = "database.txt";
-    char horario[] = "matricula.txt";
 
     while(continuar){
         cout << "\n============ Menu ============" << endl;
@@ -24,18 +23,35 @@ int main()
         switch(opcion){
              case 1:
                 char codigo[7];
+                char cedula[10];
+                char *cedulatxt;
+                cout << "Ingrese su cedula: ";
+                cin >> cedula;
+
+                cedulatxt = anexar_txt(cedula);
+
                 cout << "Ingrese el codigo de la materia: ";
                 cin >> codigo;
                 cout << endl;
-                matricular(codigo);
+                matricular(cedulatxt,codigo);
+                delete[] cedulatxt;
                 break;
             case 2:
                 imprimir(database);
                 cout << endl;
                 break;
             case 3:
-                imprimir(horario);
+                char cedula1[10];
+                char *cedulatxt1;
+                cout << "Ingrese su cedula: ";
+                cin >> cedula1;
                 cout << endl;
+                cedulatxt1 = anexar_txt(cedula1);
+                imprimir(cedulatxt1);
+                cout << endl;
+                horario();
+                cout << endl;
+                delete[] cedulatxt1;
                 break;
             case 4:
                 cout << "En construccion" << endl;

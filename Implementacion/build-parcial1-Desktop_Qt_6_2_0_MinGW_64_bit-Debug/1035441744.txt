@@ -1,0 +1,3 @@
+introduccion a la ingenieria de telecomunicaciones,2,1,1
+ingles 1,4,0,1
+probabilidad y estadistica,4,5,3
