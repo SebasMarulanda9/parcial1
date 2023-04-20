@@ -1,17 +1,5 @@
 #include <funciones.h>
 
-int len(char *texto){
-    int longitud = 0;
-    ifstream archivo(texto, ios_base::in | ios_base::binary | ios_base::ate);
-    if (!archivo.is_open()) {
-        return 0;
-    }
-    else{
-        longitud = archivo.tellg();
-    }
-    return longitud;
-}
-
 void imprimir(char *nombreArchivo){
     ifstream archivo(nombreArchivo);
 
@@ -44,16 +32,27 @@ int strcmp(const char* cadena1, const char* cadena2){
         return 0;
 }
 
-char *matricular(char *codigo){
+void matricular(char *nombre, char *codigo){
+    ifstream matri(nombre);
+    if (matri.peek() == ifstream::traits_type::eof()){
+        ofstream archivo_salida(nombre);
+        archivo_salida << endl;
+        archivo_salida.close();
+    }
+    matri.close();
+
     ifstream archivo("database.txt");
     if(archivo.is_open()) {
         char caracter;
         char cadena[7];
-        char *materia = new char[5];
+        char materia[60]={0};
         bool flag = false;
+        char dia[3];
+        char hora[3];
 
         while(archivo.get(caracter)){
             //cout << caracter;
+
             if(caracter == '\n'){
                 int indice = 0;
 
@@ -73,7 +72,7 @@ char *matricular(char *codigo){
                     flag = true;
                     int indice = 0;
 
-                    for(int i = 0; i < 6; i++){
+                    for(int i = 0; i < 60; i++){
                         if(archivo.get(caracter)){
                             if(caracter=='\n'){
                                 break;
@@ -92,23 +91,26 @@ char *matricular(char *codigo){
                             break;
                         }
                     }
-                    cout << materia;
-                    return materia;
+                    ofstream matricula(nombre, ios_base::app);
+                    cout << "Ingrese el dia (1-6): ";
+                    cin >> dia;
+                    cout << "Ingrese la hora (6-21): ";
+                    cin >> hora;
+                    matricula << materia << "," << dia << "," << hora << "\n";
+                    cout << endl << materia << "," << dia << "," << hora << endl << endl;
+                    matricula.close();
                 }
             }
         }
         archivo.close();
         if(!flag){
             cout << "Codigo incorrecto o no pertenece al pensum de ing. en telecomunicaciones.\n" << endl;
-            exit(1);
         }
     }
 
     else{
         cout << "Error al abrir el archivo." << endl;
-        exit(1);
     }
-
 }
 
 char *anexar_txt(char *cadena_original){
@@ -135,7 +137,7 @@ char *anexar_txt(char *cadena_original){
     return nueva_cadena;
 }
 
-char*** horario(){
+char*** horario(char *nombre){
     char*** horario = new char**[6];
     for (int i = 0; i < 6; i++) {
         horario[i] = new char*[16];
@@ -150,37 +152,83 @@ char*** horario(){
         }
     }
 
-    int dia, hora;
+    int dia =1, hora=0;
+    int contador =0;
     bool salir = false;
+    char materia[7];
 
     do {
-        char codigo[7];
-        char *materia;
+        ifstream archivo(nombre);
+        if(archivo.is_open()) {
+            char caracter = '\0';
+            do{
+                if(caracter == '\n'){
+                    dia = 1;
+                    hora= 0;
+                    contador = 0;
+                    int indice = 0;
 
-        cout << "Ingrese el codigo de la materia: ";
-        cin >> codigo;
+                    for(int i = 0; i < 5; i++){
+                        if (archivo.get(caracter)) {
+                            materia[indice] = caracter;
+                            indice++;
 
-        materia = matricular(codigo);
+                        }
 
-        cout << "\nIngresa el dia: (1-6) (0 para salir): ";
-        cin >> dia;
+                        else{
+                            break;
+                        }
+                    }
+                    materia[indice] = '\0';
+                }
+                if(caracter == ','){
+                    contador++;
+                    archivo.get(caracter);
+                    if(contador==2){
+                        dia = caracter - '0';
+                    }
+                    if(contador==3){
+                        for(int i = 0; i < 1; i++){
+                            char caracterfinal[2] = {caracter, 0};
+                            if(archivo.get(caracter)){
+                                if(caracter!='\n'){
+                                    caracterfinal[1] = caracter;
+                                    hora = ((caracterfinal[0] - '0') * 10) + (caracterfinal[1] - '0');
+                                }
+                                else{
+                                    archivo.unget();
+                                    caracterfinal[1] = '0';
+                                    hora = ((caracterfinal[0] - '0') * 10) + (caracterfinal[1] - '0');
+                                    hora = hora/10;
+                                }
 
-        if (dia == 0) {
-            salir = true;
-            continue;
+                            }
+                            else{
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (dia >= 1 && dia <= 6 && hora >= 6 && hora <= 21) {
+                    for (int i = 0; i < strlen(materia); i++) {
+                        horario[dia-1][hora-6][i] = materia[i];
+                    }
+                    horario[dia-1][hora-6][strlen(materia)] = '\0';
+                }
+
+                if(caracter=='\0'){
+                    salir = true;
+                    continue;
+                }
+            }while(archivo.get(caracter));
+        archivo.close();
         }
 
-        cout << "Ingresa la hora (6 a 21): ";
-        cin >> hora;
-
-        if (dia >= 1 && dia <= 6 && hora >= 6 && hora <= 21) {
-            for (int i = 0; i < strlen(materia); i++) {
-                horario[dia-1][hora-6][i] = materia[i];
-            }
-            horario[dia-1][hora-6][strlen(materia)] = '\0';
-        } else {
-            cout << "Entrada invalida. Intentalo de nuevo.\n";
+        else{
+            cout << "Error al abrir el archivo." << endl;
+            exit(1);
         }
+        archivo.close();
 
         cout << "\nHORARIO\n";
         cout << "      LUNES    MARTES MIERCOLES JUEVES   VIERNES  SABADO\n";
@@ -192,7 +240,6 @@ char*** horario(){
             cout << endl;
         }
         cout << endl;
-        delete[] materia;
     } while (!salir);
 
     return horario;

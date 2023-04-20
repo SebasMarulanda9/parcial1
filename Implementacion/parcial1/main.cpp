@@ -11,41 +11,64 @@ int main()
         cout << "\n============ Menu ============" << endl;
         cout << "1. Ingresar materias" << endl;
         cout << "2. Ver pensum" << endl;
-        cout << "3. Sugerir horas de estudio" << endl;
-        cout << "4. Salir" << endl << endl;
+        cout << "3. Ver horario" << endl;
+        cout << "4. Sugerir horas de estudio" << endl;
+        cout << "5. Salir" << endl << endl;
 
         int opcion;
         cout << "Seleccione una opcion: ";
         cin >> opcion;
         system("cls");
-        char*** horarios = new char**[6];
 
         switch(opcion){
              case 1: {
-                horarios = horario();
+                char codigo[7];
+                char cedula[10];
+                char *cedulatxt;
+                cout << "Ingrese su cedula: ";
+                cin >> cedula;
+
+                cedulatxt = anexar_txt(cedula);
+
+                cout << "Ingrese el codigo de la materia: ";
+                cin >> codigo;
+                cout << endl;
+
+                matricular(cedulatxt,codigo);
+                horario(cedulatxt);
+
+                delete[] cedulatxt;
+
                 break;
             }
             case 2: {
                 imprimir(database);
                 cout << endl;
+
                 break;
             }
             case 3: {
-                cout << "\nHORARIO\n";
-                cout << "      LUNES    MARTES MIERCOLES JUEVES   VIERNES  SABADO\n";
-                for (int j = 0; j < 16; j++) {
-                    printf("%02d:00 ", j+6);
-                    for (int i = 0; i < 6; i++) {
-                        printf("%-9s", horarios[i][j]);
-                    }
-                }
-                cout << endl;
+                char cedula[10];
+                char *cedulatxt = nullptr;
+                cout << "Ingrese su cedula: ";
+                cin >> cedula;
+
+                cedulatxt = anexar_txt(cedula);
+                horario(cedulatxt);
+
+                delete[] cedulatxt;
 
                 break;
             }
             case 4: {
+                cout << "En contruccion" << endl;
+
+                break;
+            }
+            case 5: {
                 cout << "Saliendo del programa..." << endl;
                 continuar = false;
+
                 break;
             }
             default: {

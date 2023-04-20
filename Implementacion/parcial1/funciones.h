@@ -7,13 +7,11 @@
 
 using namespace std;
 
-int len(char *texto);
 int strcmp(const char* cadena1, const char* cadena2);
-char *my_strtok(char* cadena, char delimitador);
-char *matricular(char *codigo);
+void matricular(char *nombre, char *codigo);
 void imprimir(char *nombreArchivo);
 char *anexar_txt(char* cadena_original);
-char*** horario();
+char*** horario(char *nombre);
 size_t strlen(const char* str);
 
 #endif // FUNCIONES_H
