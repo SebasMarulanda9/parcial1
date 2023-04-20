@@ -44,12 +44,12 @@ int strcmp(const char* cadena1, const char* cadena2){
         return 0;
 }
 
-void matricular(char *nombre, char *codigo){
+char *matricular(char *codigo){
     ifstream archivo("database.txt");
     if(archivo.is_open()) {
         char caracter;
         char cadena[7];
-        char materia[60]={0};
+        char *materia = new char[5];
         bool flag = false;
 
         while(archivo.get(caracter)){
@@ -73,7 +73,7 @@ void matricular(char *nombre, char *codigo){
                     flag = true;
                     int indice = 0;
 
-                    for(int i = 0; i < 60; i++){
+                    for(int i = 0; i < 6; i++){
                         if(archivo.get(caracter)){
                             if(caracter=='\n'){
                                 break;
@@ -92,22 +92,23 @@ void matricular(char *nombre, char *codigo){
                             break;
                         }
                     }
-                    ofstream matricula(nombre, ios_base::app);
-                    matricula << materia << "\n";
-                    cout << materia << " (MATERIA AGREGADA CON EXITO)" << endl << endl;
-                    matricula.close();
+                    cout << materia;
+                    return materia;
                 }
             }
         }
         archivo.close();
         if(!flag){
             cout << "Codigo incorrecto o no pertenece al pensum de ing. en telecomunicaciones.\n" << endl;
+            exit(1);
         }
     }
 
     else{
         cout << "Error al abrir el archivo." << endl;
+        exit(1);
     }
+
 }
 
 char *anexar_txt(char *cadena_original){
@@ -134,122 +135,82 @@ char *anexar_txt(char *cadena_original){
     return nueva_cadena;
 }
 
-void horario(){
-    //asignamos memoria dinamica para las 6 filas (dias) y 15 columnas (horas)
-    int **matrix;
-    matrix = new int *[17];
-    for(int i=0;i<17; i++){
-        matrix[i]=new int[7];
+char*** horario(){
+    char*** horario = new char**[6];
+    for (int i = 0; i < 6; i++) {
+        horario[i] = new char*[16];
+        for (int j = 0; j < 16; j++) {
+            horario[i][j] = new char[20];
+            horario[i][j][0] = '-';
+            horario[i][j][1] = '-';
+            horario[i][j][2] = '-';
+            horario[i][j][3] = '-';
+            horario[i][j][4] = '-';
+            horario[i][j][5] = '\0';
+        }
     }
-    //las inicializamos en cero para que no haya basura y para que todas esten en "LIBRE".
-    for(int j=0;j<17;j++){
-        for(int k=0;k<7;k++){
-            *(*(matrix+j)+k) = 0;
+
+    int dia, hora;
+    bool salir = false;
+
+    do {
+        char codigo[7];
+        char *materia;
+
+        cout << "Ingrese el codigo de la materia: ";
+        cin >> codigo;
+
+        materia = matricular(codigo);
+
+        cout << "\nIngresa el dia: (1-6) (0 para salir): ";
+        cin >> dia;
+
+        if (dia == 0) {
+            salir = true;
+            continue;
         }
 
+        cout << "Ingresa la hora (6 a 21): ";
+        cin >> hora;
+
+        if (dia >= 1 && dia <= 6 && hora >= 6 && hora <= 21) {
+            for (int i = 0; i < strlen(materia); i++) {
+                horario[dia-1][hora-6][i] = materia[i];
+            }
+            horario[dia-1][hora-6][strlen(materia)] = '\0';
+        } else {
+            cout << "Entrada invalida. Intentalo de nuevo.\n";
+        }
+
+        cout << "\nHORARIO\n";
+        cout << "      LUNES    MARTES MIERCOLES JUEVES   VIERNES  SABADO\n";
+        for (int j = 0; j < 16; j++) {
+            printf("%02d:00 ", j+6);
+            for (int i = 0; i < 6; i++) {
+                printf("%-9s", horario[i][j]);
+            }
+            cout << endl;
+        }
+        cout << endl;
+        delete[] materia;
+    } while (!salir);
+
+    return horario;
+
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 16; j++) {
+            delete[] horario[i][j];
+        }
+        delete[] horario[i];
     }
-    bool finished = false; //ponemos una bandera.
 
-    char name[] = "Materia";
+    delete[] horario;
+}
 
-    while(finished==false){
-        for(int j=0;j<17;j++){
-            for(int k=0;k<7;k++){
-                if(k==0 && j==0)
-                    cout << "      ";
-                else if(k==0 && j==1)
-                    cout << "06:00";
-                else if(k==0 && j==2)
-                    cout << "07:00";
-                else if(k==0 && j==3)
-                    cout << "08:00";
-                else if(k==0 && j==4)
-                    cout << "09:00";
-                else if(k==0 && j==5)
-                    cout << "10:00";
-                else if(k==0 && j==6)
-                    cout << "11:00";
-                else if(k==0 && j==7)
-                    cout << "12:00";
-                else if(k==0 && j==8)
-                    cout << "01:00";
-                else if(k==0 && j==9)
-                    cout << "02:00";
-                else if(k==0 && j==10)
-                    cout << "03:00";
-                else if(k==0 && j==11)
-                    cout << "04:00";
-                else if(k==0 && j==12)
-                    cout << "05:00";
-                else if(k==0 && j==13)
-                    cout << "06:00";
-                else if(k==0 && j==14)
-                    cout << "07:00";
-                else if(k==0 && j==15)
-                    cout << "08:00";
-                else if(k==0 && j==16)
-                    cout << "09:00";
-                else if(k==1 && j==0)
-                    cout << "LUNES    ";
-                else if(k==2 && j==0)
-                    cout << "MARTES   ";
-                else if(k==3 && j==0)
-                    cout << "MIERCOLES   ";
-                else if(k==4 && j==0)
-                    cout << "JUEVES   ";
-                else if(k==5 && j==0)
-                    cout << "VIERNES   ";
-                else if(k==6 && j==0)
-                    cout << "SABADO";
-
-                else{
-                    if((*(*(matrix+j)+k))==0) cout<<" LIBRE    ";  //es como tener matriz[j][k] y empezaramos a pasar de posiciones.
-                    else cout<<name;  //para cuando esta matriz es = 1, que es cuando esta ocupada.
-                }
-            }
-            cout<<endl;
-        }
-        char fila, option; int columna;
-        cout<<"Ingrese a para reservar una hora de su horario. "<<endl<<"Ingrese b para quitar un horario.  "<<endl<<"Ingrese una letra diferente para salir "<<endl;
-        cin>>option;
-        if(option!='a' && option!='b') break;
-        cout<<"Ingrese el dia, lunes a sabado, solo la inicial y en mayuscula. EJM: martes = M... "<<endl; cin>>fila;
-        cout<<"Ingrese la columna 6-20 "<<endl; cin>>columna;
-        switch (fila) {
-        case 'L':{
-            if(option=='a') *(*(matrix)+(columna-6))=1;   //usamos algebra de punteros para posicionarnos en cada fila que indica los dias.
-            else *(*(matrix)+(columna-6))=0;  //a las columnas les quitamos 6 porque el dia de estudio empieza a las 6 am.
-            break;
-        }
-        case 'M':{
-            if(option=='a') *(*(matrix+1)+(columna-6))=1;  //con algebra de punteros nos empezamos a mover en la matriz, ahora pasando a la siguiente fila.
-            else *(*(matrix+1)+(columna-6))=0;  //cuando escogio la opcion a, e ingreso este dia martes, solo seria movernos entre la fila del martes. cero esta libre, 1 esta ocupada.
-            break;
-        }
-        case 'W':{
-            if(option=='a') *(*(matrix+2)+(columna-6))=1;
-            else *(*(matrix+2)+(columna-6))=0;
-            break;
-        }
-        case 'J':{
-            if(option=='a') *(*(matrix+3)+(columna-6))=1;
-            else *(*(matrix+3)+(columna-6))=0;
-            break;
-        }
-        case 'V':{
-            if(option=='a') *(*(matrix+4)+(columna-6))=1;
-            else *(*(matrix+4)+(columna-6))=0;
-            break;
-        }
-        case 'S':{
-            if(option=='a') *(*(matrix+5)+(columna-6))=1;
-            else *(*(matrix+5)+(columna-6))=0;
-            break;
-            }
-            default:{
-                cout<<"Los valores ingresados son invalidos "<<endl;
-            }
-            }
-        }
-        delete [] matrix;
+size_t strlen(const char* str) {
+    const char* p = str;
+    while (*p) {
+        ++p;
+    }
+    return p - str;
 }
